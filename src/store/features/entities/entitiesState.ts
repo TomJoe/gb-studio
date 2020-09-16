@@ -62,6 +62,7 @@ import {
   SceneData,
   EntityKey,
   MusicSettings,
+  EngineProp,
 } from "./entitiesTypes";
 import { normalizeEntities } from "./entitiesHelpers";
 
@@ -95,6 +96,7 @@ const musicAdapter = createEntityAdapter<Music>({
   sortComparer: sortByFilename,
 });
 const variablesAdapter = createEntityAdapter<Variable>();
+const enginePropsAdapter = createEntityAdapter<EngineProp>();
 
 export const initialState: EntitiesState = {
   actors: actorsAdapter.getInitialState(),
@@ -106,6 +108,7 @@ export const initialState: EntitiesState = {
   customEvents: customEventsAdapter.getInitialState(),
   music: musicAdapter.getInitialState(),
   variables: variablesAdapter.getInitialState(),
+  engineProps: enginePropsAdapter.getInitialState(),
 };
 
 const moveSelectedEntity = ({
@@ -352,6 +355,7 @@ const loadProject: CaseReducer<
   musicAdapter.setAll(state.music, entities.music || {});
   customEventsAdapter.setAll(state.customEvents, entities.customEvents || {});
   variablesAdapter.setAll(state.variables, entities.variables || {});
+  enginePropsAdapter.setAll(state.engineProps, entities.engineProps || {});
   fixAllScenesWithModifiedBackgrounds(state);
 };
 
@@ -1762,6 +1766,21 @@ const removeCustomEvent: CaseReducer<
 };
 
 /**************************************************************************
+ * EngineProps
+ */ 
+
+const editEngineProp: CaseReducer<EntitiesState, PayloadAction<{ enginePropId: string, value: any }>> = (state, action) => {
+  enginePropsAdapter.upsertOne(state.engineProps, {
+    id: action.payload.enginePropId,
+    value: action.payload.value
+  })
+}
+
+const removeEngineProp: CaseReducer<EntitiesState, PayloadAction<{ enginePropId: string }>> = (state, action) => {
+  enginePropsAdapter.removeOne(state.engineProps, action.payload.enginePropId);
+}
+
+/**************************************************************************
  * General Assets
  */
 
@@ -1922,6 +1941,13 @@ const entitiesSlice = createSlice({
      */
 
     editMusicSettings,
+
+    /**************************************************************************
+     * EngineProps
+     */ 
+
+     editEngineProp,
+     removeEngineProp,
   },
   extraReducers: (builder) =>
     builder
@@ -2001,6 +2027,9 @@ export const musicSelectors = musicAdapter.getSelectors(
 );
 export const variableSelectors = variablesAdapter.getSelectors(
   (state: RootState) => state.project.present.entities.variables
+);
+export const enginePropSelectors = enginePropsAdapter.getSelectors(
+  (state: RootState) => state.project.present.entities.engineProps
 );
 
 export const getMaxSceneRight = createSelector(

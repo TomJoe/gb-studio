@@ -96,6 +96,11 @@ export type CustomEvent = {
   script: ScriptEvent[];
 };
 
+export type EngineProp = {
+  id: string;
+  value: any;
+};
+
 export type SpriteSheet = {
   id: string;
   name: string;
@@ -149,6 +154,7 @@ export interface EntitiesState {
   customEvents: EntityState<CustomEvent>;
   music: EntityState<Music>;
   variables: EntityState<Variable>;
+  engineProps: EntityState<EngineProp>;
 }
 
 export type Asset = {

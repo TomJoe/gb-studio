@@ -178,6 +178,13 @@ const loadProject = async (projectPath) => {
     scenes: fixedScenes,
     customEvents: fixedCustomEvents,
     palettes: fixedPalettes,
+    engineProps: [{
+      id: "minWalkVel",
+      value: 0x60
+    },{
+      id: "maxWalkVel",
+      value: 0xFF
+    }]
   };
 };
 
