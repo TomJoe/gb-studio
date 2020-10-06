@@ -160,8 +160,9 @@ UBYTE LoadSprite(UINT16 index, UBYTE sprite_offset) {
 }
 
 void LoadScene(UINT16 index) {
-  UBYTE bank, i, k;
-  UBYTE* data_ptr;
+  static UBYTE bank;
+  static UBYTE* data_ptr;
+  UBYTE i, k;
 
   PUSH_BANK(DATA_PTRS_BANK);
   bank = scene_bank_ptrs[index].bank;
