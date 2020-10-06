@@ -31,5 +31,11 @@ REM Automatically generated from Makefile
 ..\..\bin\lcc -Wa-l -Wl-m -Wl-j -c -o new_banks.o new_banks.c
 ..\..\bin\lcc -Wa-l -Wl-m -Wl-j -Wl-yt2 -Wl-yo4 -Wl-ya4 -o new_banks.gb MBC1_RAM_INIT.o new_banks.o
 ..\..\bin\lcc -Wa-l -Wl-m -Wl-j -c -o farptr.o farptr.c
-..\..\bin\lcc -Wa-l -Wl-m -Wl-j -Wf-bo1 -c -o bank1code.o bank1code.c
-..\..\bin\lcc -Wa-l -Wl-m -Wl-j -Wl-yt1 -Wl-yo4 -o farptr.gb bank1code.o farptr.o
+..\..\bin\lcc -Wa-l -Wl-m -Wl-j -Wf-bo1 -c -o bank2code.o bank2code.c
+..\..\bin\lcc -Wa-l -Wl-m -Wl-j -Wl-yt1 -Wl-yo4 -o farptr.gb bank2code.o farptr.o
+..\..\bin\lcc -Wa-l -Wl-m -Wl-j -c -o bcd.o bcd.c
+..\..\bin\lcc -Wa-l -Wl-m -Wl-j -o bcd.gb bcd.o
+..\..\bin\lcc -Wa-l -Wl-m -Wl-j -c -o wobble.o wobble.c
+..\..\bin\lcc -Wa-l -Wl-m -Wl-j -o wobble.gb wobble.o
+..\..\bin\lcc -Wa-l -Wl-m -Wl-j -c -o crash.o crash.c
+..\..\bin\lcc -Wa-l -Wl-m -Wl-j -o crash.gb crash.o

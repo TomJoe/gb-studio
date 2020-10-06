@@ -13,7 +13,10 @@ BINS	= galaxy.gb \
 	samptest.gb \
 	banks.gb \
 	new_banks.gb \
-	farptr.gb
+	farptr.gb \
+	bcd.gb \
+	wobble.gb \
+	crash.gb
 
 # sound.gb: Cant do bitfields
 OTHER = sound.gb \
@@ -37,7 +40,7 @@ make.bat: Makefile
 	$(CC) -o $@ $<
 
 clean:
-	rm -f *.o *.lst *.map *.gb *~ *.rel *.cdb *.ihx *.lnk *.sym *.asm
+	rm -f *.o *.lst *.map *.gb *~ *.rel *.cdb *.ihx *.lnk *.sym *.asm *.noi
 
 ############################################################
 # Multiple bank example
@@ -80,11 +83,11 @@ banks.gb:	banks.o bank_0.o bank_1.o bank_2.o bank_3.o
 ############################################################
 # Far pointers example
 
-bank1code.o:	bank1code.c
+bank2code.o:	bank2code.c
 	$(CC) -Wf-bo1 -c -o $@ $<
 
-farptr.gb:	farptr.o bank1code.o
-	$(CC) -Wl-yt1 -Wl-yo4 -o $@ bank1code.o farptr.o
+farptr.gb:	farptr.o bank2code.o
+	$(CC) -Wl-yt1 -Wl-yo4 -o $@ bank2code.o farptr.o
 
 ############################################################
 # Multiple banks NEW example
