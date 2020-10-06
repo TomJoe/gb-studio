@@ -169,21 +169,21 @@ const compileMusic = async ({
       objectVarOffset += patternOffsetObjectData[t].length;
     }
 
-    const objectFile = `XL
-H A areas ${musicBank.tracks.length + 1} global symbols
+    const objectFile = `XL3
+H 8 areas ${(musicBank.tracks.length + 2).toString(16)} global symbols
 M music_bank_${musicBank.bank}
-A _CODE size 0 flags 0
-A _DATA size 0 flags 0
-A _OVERLAY size 0 flags 0
-A _ISEG size 0 flags 0
-A _BSEG size 0 flags 0
-A _XSEG size 0 flags 0
-A _GSINIT size 0 flags 0
-A _GSFINAL size 0 flags 0
-A _HOME size 0 flags 0
-A _CODE_${musicBank.bank} size ${wrap16Bit(objectData.length).toString(16)} flags 0
-S _bank_${musicBank.bank}_data Def0000
-${objectVarDef}${objectIntArray(objectData)}`;
+O -mgbz80
+S .__.ABS. Def000000
+A _CODE size 0 flags 0 addr 0
+A _DATA size 0 flags 0 addr 0
+A _DABS size 0 flags 8 addr 0
+A _HOME size 0 flags 0 addr 0
+A _GSINIT size 0 flags 0 addr 0
+A _GSFINAL size 0 flags 0 addr 0
+A _CODE_${musicBank.bank} size ${wrap16Bit(objectData.length).toString(16)} flags 0 addr 0
+S _bank_${musicBank.bank}_data Def000000
+${objectVarDef}A _CABS size 0 flags 8 addr 0
+${objectIntArray(objectData)}`;
     
     await fs.writeFile(
       `${buildRoot}/src/music/music_bank_${musicBank.bank}.c`,

@@ -101,25 +101,21 @@ class BankedData {
     return this.data
       .map((data, index) => {
         const bank = this.dataWriteBanks[index];
-        return `XL
-H A areas 1 global symbols
+        return `XL3
+H 8 areas 2 global symbols
 M bank_${bank}
-A _CODE size 0 flags 0
-A _DATA size 0 flags 0
-A _OVERLAY size 0 flags 0
-A _ISEG size 0 flags 0
-A _BSEG size 0 flags 0
-A _XSEG size 0 flags 0
-A _GSINIT size 0 flags 0
-A _GSFINAL size 0 flags 0
-A _HOME size 0 flags 0
-A _CODE_${bank} size ${wrap16Bit(data.length).toString(16)} flags 0
-S _bank_${bank}_data Def0000
+O -mgbz80
+S .__.ABS. Def000000
+A _CODE size 0 flags 0 addr 0
+A _DATA size 0 flags 0 addr 0
+A _DABS size 0 flags 8 addr 0
+A _HOME size 0 flags 0 addr 0
+A _GSINIT size 0 flags 0 addr 0
+A _GSFINAL size 0 flags 0 addr 0
+A _CODE_${bank} size ${wrap16Bit(data.length).toString(16)} flags 0 addr 0
+S _bank_${bank}_data Def000000
+A _CABS size 0 flags 8 addr 0
 ${objectIntArray(data)}`;
-        // return `#pragma bank ${bank}\n\n${cIntArray(
-        //   `bank_${bank}_data`,
-        //   data
-        // )}\n`;
       })
       .filter((i) => i);
   }
