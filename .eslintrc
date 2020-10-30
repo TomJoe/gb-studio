@@ -1,7 +1,6 @@
 {
   "extends": ["eslint-config-airbnb", "react-app", "prettier"],
-  "parser": "babel-eslint",
-  "plugins": ["babel"],
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2018
   },
@@ -31,7 +30,8 @@
     "jsx-a11y/mouse-events-have-key-events": 0,
     "jsx-a11y/no-noninteractive-element-interactions": 0,
     "no-await-in-loop": 0,
-    "camelcase": ["error", {"allow": ["UNSAFE_componentWillReceiveProps"]}]
+    "camelcase": ["error", {"allow": ["UNSAFE_componentWillReceiveProps"]}],
+    "no-param-reassign": ["error", { "props": false }]
   },
   "env": {
     "browser": true,
