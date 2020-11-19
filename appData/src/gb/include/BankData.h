@@ -3,11 +3,14 @@
 
 #include <gb/gb.h>
 
-#define BankDataPtr(bank) ((UBYTE *)0x4000)
+#define BankDataPtr 0x4000U
+
+#define FETCH_PTR(DEST, SOURCE) (DEST).bank = ((BankPtr*)(SOURCE))->bank, (DEST).offset = ((BankPtr*)(SOURCE))->offset, (SOURCE) += sizeof(BankPtr)
+#define FETCH_BE_OFFSET(SOURCE) (*((SOURCE)++) * 256) + *((SOURCE)++)
 
 typedef struct _BankPtr {
   UBYTE bank;
-  UWORD offset;
+  UBYTE * offset;
 } BankPtr;
 
 /**

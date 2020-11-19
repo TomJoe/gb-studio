@@ -478,8 +478,7 @@ const compile = async (
         return `extern const BankPtr ${name}[];`;
       })
       .join(`\n`)}\n` +
-    `extern const unsigned int bank_data_ptrs[];\n` +
-    `extern const unsigned int music_tracks[];\n` +
+    `extern const void * const music_tracks[];\n` +
     `extern const unsigned char music_banks[];\n` +
     `extern unsigned int start_scene_index;\n` +
     `extern int start_scene_x;\n` +
@@ -499,22 +498,20 @@ const compile = async (
     `#pragma bank ${DATA_PTRS_BANK}\n` +
     `#include "data_ptrs.h"\n` +
     `#include "banks.h"\n\n` +
-    `#ifdef __EMSCRIPTEN__\n` +
-    `const unsigned int bank_data_ptrs[] = {\n` +
-    bankDataPtrs.join(",") +
-    `\n};\n` +
-    `#endif\n\n` +
     Object.keys(dataPtrs)
       .map((name) => {
         return `const BankPtr ${name}[] = {\n${dataPtrs[name]
           .map((dataPtr) => {
-            return `{${decHex(dataPtr.bank)},${decHex16(dataPtr.offset)}}`;
+            return dataPtr.bank
+              ? `{${decHex(dataPtr.bank)},&bank_${dataPtr.bank}_data[${decHex16(dataPtr.offset)}]}`
+              : `{0x0,0x0}`;
           })
           .join(",")}\n};\n`;
       })
       .join(`\n`) +
     `\n` +
-    `const unsigned int music_tracks[] = {\n` +
+    `const void * const music_tracks[] = {\n` +
+      (precompiled.usedMusic.map((track) => `&${track.dataName}_Data`).join(",") || "0") +
     `\n};\n\n` +
     `const unsigned char music_banks[] = {\n` +
     `\n};\n\n` +

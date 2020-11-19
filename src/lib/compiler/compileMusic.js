@@ -213,14 +213,6 @@ ${objectVarDef}${objectIntArray(objectData)}`;
     }, 0`
   );
 
-  // Set music_tracks array to track memory addresses
-  dataptrTemp = dataptrTemp.replace(
-    /const unsigned int music_tracks\[\] = {[^}]*}/g,
-    `const unsigned int music_tracks[] = {\n${
-      trackPtrs.map((track) => decHex16(track.offset)).join(", ") || "0"
-    }, 0\n}`
-  );
-
   await fs.writeFile(`${buildRoot}/src/data/data_ptrs.c`, dataptrTemp, "utf8");
 
   // Great for debugging build errors

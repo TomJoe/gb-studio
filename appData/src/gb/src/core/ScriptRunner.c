@@ -43,7 +43,7 @@ void ScriptStart(BankPtr* events_ptr) {
   script_variables[TMP_VAR_2] = 0;
 
   script_ctxs[0].script_ptr_bank = events_ptr->bank;
-  script_ctxs[0].script_ptr = (BankDataPtr(script_ctxs[0].script_ptr_bank)) + events_ptr->offset;
+  script_ctxs[0].script_ptr = BankDataPtr + events_ptr->offset;
   script_ctxs[0].script_update_fn = FALSE;
   script_ctxs[0].script_start_ptr = script_ctxs[0].script_ptr;
 }
@@ -62,8 +62,7 @@ UBYTE ScriptStartBg(BankPtr* events_ptr, UBYTE owner) {
 
     script_ctxs[new_ctx].owner = 0;  // @wtf
     script_ctxs[new_ctx].script_ptr_bank = events_ptr->bank;
-    script_ctxs[new_ctx].script_ptr =
-        (BankDataPtr(script_ctxs[new_ctx].script_ptr_bank)) + events_ptr->offset;
+    script_ctxs[new_ctx].script_ptr = BankDataPtr + events_ptr->offset;
     script_ctxs[new_ctx].script_update_fn = FALSE;
     script_ctxs[new_ctx].script_start_ptr = script_ctxs[new_ctx].script_ptr;
     script_ctxs[new_ctx].owner = owner;

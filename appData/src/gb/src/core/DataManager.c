@@ -38,7 +38,7 @@ void LoadTiles(UINT16 index) {
 
   PUSH_BANK(DATA_PTRS_BANK);
   bank = tileset_bank_ptrs[index].bank;
-  data_ptr = (UBYTE*)(tileset_bank_ptrs[index].offset + (BankDataPtr(bank)));
+  data_ptr = (UBYTE*)(tileset_bank_ptrs[index].offset);
   POP_BANK;
 
   PUSH_BANK(bank);
@@ -52,7 +52,7 @@ void LoadImage(UINT16 index) {
 
   PUSH_BANK(DATA_PTRS_BANK);
   image_bank = background_bank_ptrs[index].bank;
-  data_ptr = (UBYTE*)(background_bank_ptrs[index].offset + (BankDataPtr(image_bank)));
+  data_ptr = (UBYTE*)(background_bank_ptrs[index].offset);
   POP_BANK;
 
   PUSH_BANK(image_bank);
@@ -74,7 +74,7 @@ void LoadImageAttr(UINT16 index) {
   PUSH_BANK(DATA_PTRS_BANK);
   image_attr_bank = background_attr_bank_ptrs[index].bank;
   image_attr_ptr =
-      (unsigned char*)(background_attr_bank_ptrs[index].offset + (BankDataPtr(image_attr_bank)));
+      (unsigned char*)(background_attr_bank_ptrs[index].offset);
   POP_BANK;
 }
 
@@ -84,7 +84,7 @@ void LoadPalette(UINT16 index) {
 
   PUSH_BANK(DATA_PTRS_BANK);
   bank = palette_bank_ptrs[index].bank;
-  data_ptr = (UBYTE*)(palette_bank_ptrs[index].offset + (BankDataPtr(bank)));
+  data_ptr = (UBYTE*)(palette_bank_ptrs[index].offset);
   POP_BANK;
 
   PUSH_BANK(bank);
@@ -118,7 +118,7 @@ void LoadUIPalette(UINT16 index) {
 
   PUSH_BANK(DATA_PTRS_BANK);
   bank = palette_bank_ptrs[index].bank;
-  data_ptr = (UBYTE*)(palette_bank_ptrs[index].offset + (BankDataPtr(bank)));
+  data_ptr = (UBYTE*)(palette_bank_ptrs[index].offset);
   POP_BANK;
 
   PUSH_BANK(bank);
@@ -132,7 +132,7 @@ void LoadSpritePalette(UINT16 index) {
 
   PUSH_BANK(DATA_PTRS_BANK);
   bank = palette_bank_ptrs[index].bank;
-  data_ptr = (UBYTE*)(palette_bank_ptrs[index].offset + (BankDataPtr(bank)));
+  data_ptr = (UBYTE*)(palette_bank_ptrs[index].offset);
   POP_BANK;
 
   PUSH_BANK(bank);
@@ -146,7 +146,7 @@ void LoadPlayerSpritePalette(UINT16 index) {
 
   PUSH_BANK(DATA_PTRS_BANK);
   bank = palette_bank_ptrs[index].bank;
-  data_ptr = (UBYTE*)(palette_bank_ptrs[index].offset + (BankDataPtr(bank)));
+  data_ptr = (UBYTE*)(palette_bank_ptrs[index].offset);
   POP_BANK;
 
   PUSH_BANK(bank);
@@ -160,7 +160,7 @@ UBYTE LoadSprite(UINT16 index, UBYTE sprite_offset) {
 
   PUSH_BANK(DATA_PTRS_BANK);
   bank = sprite_bank_ptrs[index].bank;
-  data_ptr = (UBYTE*)(sprite_bank_ptrs[index].offset + (BankDataPtr(bank)));
+  data_ptr = (UBYTE*)(sprite_bank_ptrs[index].offset);
   POP_BANK;
 
   PUSH_BANK(bank);
@@ -185,21 +185,20 @@ void LoadScene(UINT16 index) {
 
   PUSH_BANK(DATA_PTRS_BANK);
   bank = scene_bank_ptrs[index].bank;
-  data_ptr = (scene_bank_ptrs[index].offset + (BankDataPtr(bank)));
+  data_ptr = scene_bank_ptrs[index].offset;
 
   collision_bank = collision_bank_ptrs[index].bank;
-  collision_ptr =
-      (unsigned char*)(collision_bank_ptrs[index].offset + (BankDataPtr(collision_bank)));
+  collision_ptr = collision_bank_ptrs[index].offset;
   POP_BANK;
 
   SpritePoolReset();
   ScriptCtxPoolReset();
 
   PUSH_BANK(bank);
-  LoadImage((*(data_ptr++) * 256) + *(data_ptr++));
+  LoadImage(FETCH_BE_OFFSET(data_ptr));
   LoadImageAttr(index);
-  LoadPalette((*(data_ptr++) * 256) + *(data_ptr++));
-  LoadSpritePalette((*(data_ptr++) * 256) + *(data_ptr++));
+  LoadPalette(FETCH_BE_OFFSET(data_ptr));
+  LoadSpritePalette(FETCH_BE_OFFSET(data_ptr));
   LoadPlayerSpritePalette(0);
   LoadUIPalette(1);
   UIReset();
@@ -213,13 +212,12 @@ void LoadScene(UINT16 index) {
   actors_len = (*(data_ptr++)) + 1;
   triggers_len = *(data_ptr++);
 
-  scene_events_start_ptr.bank = *(data_ptr++);
-  scene_events_start_ptr.offset = *(data_ptr++) + (*(data_ptr++) * 256);
+  FETCH_PTR(scene_events_start_ptr, data_ptr);
 
   // Load sprites
   k = 24;
   for (i = 1; i != sprites_len; i++) {
-    UBYTE sprite_len = LoadSprite((*(data_ptr++) * 256) + *(data_ptr++), k);
+    UBYTE sprite_len = LoadSprite(FETCH_BE_OFFSET(data_ptr), k);
     sprites_info[i].sprite_offset = DIV_4(k);
     sprites_info[i].frames_len = DIV_4(sprite_len);
     if (sprites_info[i].frames_len == 6) {
@@ -264,20 +262,11 @@ void LoadScene(UINT16 index) {
 
     actors[i].collisionsEnabled = !actors[i].pinned;
 
-    actors[i].events_ptr.bank = *(data_ptr++);
-    actors[i].events_ptr.offset = *(data_ptr++) + (*(data_ptr++) * 256);
-
-    actors[i].movement_ptr.bank = *(data_ptr++);
-    actors[i].movement_ptr.offset = *(data_ptr++) + (*(data_ptr++) * 256);
-
-    actors[i].hit_1_ptr.bank = *(data_ptr++);
-    actors[i].hit_1_ptr.offset = *(data_ptr++) + (*(data_ptr++) * 256);
-
-    actors[i].hit_2_ptr.bank = *(data_ptr++);
-    actors[i].hit_2_ptr.offset = *(data_ptr++) + (*(data_ptr++) * 256);
-
-    actors[i].hit_3_ptr.bank = *(data_ptr++);
-    actors[i].hit_3_ptr.offset = *(data_ptr++) + (*(data_ptr++) * 256);
+    FETCH_PTR(actors[i].events_ptr, data_ptr);
+    FETCH_PTR(actors[i].movement_ptr, data_ptr);
+    FETCH_PTR(actors[i].hit_1_ptr, data_ptr);
+    FETCH_PTR(actors[i].hit_2_ptr, data_ptr);
+    FETCH_PTR(actors[i].hit_3_ptr, data_ptr);
 
     actors[i].movement_ctx = 0;
     actors[i].script_control = FALSE;
@@ -293,8 +282,7 @@ void LoadScene(UINT16 index) {
     triggers[i].w = *(data_ptr++);
     triggers[i].h = *(data_ptr++);
     data_ptr++;  // Trigger type
-    triggers[i].events_ptr.bank = *(data_ptr++);
-    triggers[i].events_ptr.offset = *(data_ptr++) + (*(data_ptr++) * 256);
+    FETCH_PTR(triggers[i].events_ptr, data_ptr);
   }
 
   // Initialise scene
@@ -305,14 +293,9 @@ void LoadScene(UINT16 index) {
   last_trigger_tx = 0xFF;
   last_trigger_ty = 0xFF;
 
-  player.hit_1_ptr.bank = *(data_ptr++);
-  player.hit_1_ptr.offset = *(data_ptr++) + (*(data_ptr++) * 256);
-
-  player.hit_2_ptr.bank = *(data_ptr++);
-  player.hit_2_ptr.offset = *(data_ptr++) + (*(data_ptr++) * 256);
-
-  player.hit_3_ptr.bank = *(data_ptr++);
-  player.hit_3_ptr.offset = *(data_ptr++) + (*(data_ptr++) * 256);
+  FETCH_PTR(player.hit_1_ptr, data_ptr);
+  FETCH_PTR(player.hit_2_ptr, data_ptr);
+  FETCH_PTR(player.hit_3_ptr, data_ptr);
 
   // Enable all pinned actors by default
   for (i = 1; i != actors_len; i++) {

@@ -885,7 +885,7 @@ void Script_ActorSetEmote_b() {
   UBYTE palette = actors[active_script_ctx.script_actor].palette_index;
   emote_timer = 1;
   active_script_ctx.script_update_fn = ScriptUpdate_Emote;
-  emote_ptr = (BankDataPtr(EMOTES_SPRITE_BANK)) + EMOTES_SPRITE_BANK_OFFSET;
+  emote_ptr = (UBYTE *)(BankDataPtr + EMOTES_SPRITE_BANK_OFFSET);
   SetBankedSpriteData(EMOTES_SPRITE_BANK, EMOTE_SPRITE, 4,
                       emote_ptr + ((UWORD)script_cmd_args[0] * 64));
   set_sprite_prop(0, palette);
@@ -1879,7 +1879,7 @@ void Script_ActorInvoke_b() {
 
   events_ptr = &actors[active_script_ctx.script_actor].events_ptr;
   active_script_ctx.script_ptr_bank = events_ptr->bank;
-  active_script_ctx.script_ptr = (BankDataPtr(script_ctxs[ctx].active_script_ctx.script_ptr_bank)) + events_ptr->offset;
+  active_script_ctx.script_ptr = BankDataPtr + events_ptr->offset;
   active_script_ctx.script_update_fn = FALSE;
   active_script_ctx.script_start_ptr = active_script_ctx.script_ptr;
 }
@@ -2018,7 +2018,7 @@ void Script_SetInputScript_b() {
   for (index = 0; index != 8; ++index) {
     if (input & 1) {
       input_script_ptrs[index].bank = script_cmd_args[2];
-      input_script_ptrs[index].offset = (script_cmd_args[3] * 256) + script_cmd_args[4];
+      input_script_ptrs[index].offset = (UBYTE *)((script_cmd_args[3] * 256) + script_cmd_args[4]);
     }
     input = input >> 1;
   }
@@ -2176,7 +2176,7 @@ void Script_SetTimerScript_b() {
   timer_script_duration = script_cmd_args[0];
   timer_script_time = script_cmd_args[0];
   timer_script_ptr.bank = script_cmd_args[1];
-  timer_script_ptr.offset = (script_cmd_args[2] * 256) + script_cmd_args[3];
+  timer_script_ptr.offset = (UBYTE *)((script_cmd_args[2] * 256) + script_cmd_args[3]);
 }
 
 /*

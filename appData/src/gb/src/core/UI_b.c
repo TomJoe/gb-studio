@@ -120,13 +120,13 @@ void UIInit_b() __banked {
   UISetPos(0, 144);
 
   // Load frame tiles from data bank
-  ptr = (BankDataPtr(FRAME_BANK)) + FRAME_BANK_OFFSET;
+  ptr = (UBYTE *)(BankDataPtr + FRAME_BANK_OFFSET);
   SetBankedBkgData(FRAME_BANK, 192, 9, ptr);
 
   set_bkg_data(0xC9, 1, ui_white);
   set_bkg_data(0xCA, 1, ui_black);
 
-  ptr = (BankDataPtr(CURSOR_BANK)) + CURSOR_BANK_OFFSET;
+  ptr = (UBYTE *)(BankDataPtr + CURSOR_BANK_OFFSET);
   SetBankedBkgData(CURSOR_BANK, 0xCB, 1, ptr);
 }
 
@@ -343,7 +343,7 @@ void UIDrawTextBufferChar_b() {
     letter = text_lines[text_count] - 32;
 
     // Clear tile data ready for text
-    ptr = BankDataPtr(FONT_BANK) + FONT_BANK_OFFSET;
+    ptr = (UBYTE *)(BankDataPtr + FONT_BANK_OFFSET);
 
     // Determine if text can fit on line
     text_remaining = 18 - text_x;
