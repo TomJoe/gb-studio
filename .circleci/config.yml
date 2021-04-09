@@ -186,5 +186,6 @@ workflows:
             branches:
               only:
                 - develop
+                - tronimal
                 - master
                 - v2beta
