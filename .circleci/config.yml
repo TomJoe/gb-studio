@@ -43,6 +43,9 @@ jobs:
       - image: circleci/node:lts-buster
     working_directory: ~/repo
     steps:
+      - run: sudo apt-get -y update
+      - run: sudo apt-get -y install gcc
+      - run: sudo apt-get -y install lcc
       - attach_workspace:
           at: ~/
       - checkout
