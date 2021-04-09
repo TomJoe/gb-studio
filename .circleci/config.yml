@@ -147,6 +147,7 @@ workflows:
             branches:
               only:
                 - develop
+                - tronimal
                 - master
                 - v2beta
       - "make:win32":
@@ -156,6 +157,7 @@ workflows:
             branches:
               only:
                 - develop
+                - tronimal
                 - master
                 - v2beta
       - "make:win64":
@@ -165,6 +167,7 @@ workflows:
             branches:
               only:
                 - develop
+                - tronimal
                 - master
                 - v2beta
       - "make:linux":
@@ -174,6 +177,7 @@ workflows:
             branches:
               only:
                 - develop
+                - tronimal
                 - master
                 - v2beta
       - "upload_artifacts":
